@@ -1,0 +1,19 @@
+{
+  "name": "aggregator",
+  "version": "0.0.1",
+  "description": "A module that facilitates implementation of data aggregation system",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git@bitbucket.org:akayami/reducer.git"
+  },
+  "author": "Tomasz Rakowski",
+  "license": "ISC",
+  "dependencies": {
+    "mysql-cluster": "^0.1.2",
+    "reconnect-net": "0.0.0"
+  }
+}
