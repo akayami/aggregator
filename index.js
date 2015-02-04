@@ -6,5 +6,6 @@
 module.exports = {
 	aggregator: require('./lib/aggregator'),
 	protocol: require('./lib/protocol'),
-	net: require('./lib/net')
+	net: require('./lib/net'),
+	fallback: require('./lib/fallback')
 }

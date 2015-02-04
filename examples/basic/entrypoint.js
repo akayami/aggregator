@@ -27,7 +27,7 @@ server.socket(
 		aggregator: r, 
 		protocol: aggr.protocol,
 		serverOptions: {},
-		plug: function() {}
+		fallback: aggr.fallback('/tmp/entrypoint.txt')
 	}
 ).listen(1338,'127.0.0.1');
 

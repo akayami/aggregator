@@ -12,7 +12,8 @@ var net = aggr.net;
 var protocol = aggr.protocol;
 net.socket({
 	aggregator: r, 
-	protocol: protocol
+	protocol: protocol,
+	fallback: aggr.fallback('/tmp/pass.txt')
 }).listen(1337,'127.0.0.1');
 
 net.server({

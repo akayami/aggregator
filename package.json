@@ -13,6 +13,7 @@
   "author": "Tomasz Rakowski",
   "license": "ISC",
   "dependencies": {
+    "byline": "^4.2.1",
     "mysql-cluster": "^0.1.2",
     "reconnect-net": "0.0.0"
   }
