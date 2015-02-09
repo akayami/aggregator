@@ -20,13 +20,12 @@ var aggr = require('../../index');
 
 var Aggregator = aggr.aggregator;
 var r = new Aggregator(100);
-var server = aggr.net;
+var net = aggr.net;
 
-server.socket(
+net.socket(
 	{
 		aggregator: r, 
 		protocol: aggr.protocol,
-		serverOptions: {},
 		fallback: aggr.fallback('/tmp/entrypoint.txt')
 	}
 ).listen(1338,'127.0.0.1');
