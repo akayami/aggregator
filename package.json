@@ -15,7 +15,8 @@
   "dependencies": {
     "byline": "^4.2.1",
     "mysql-cluster": "^0.1.2",
-    "reconnect-net": "0.0.0"
+    "reconnect-net": "0.0.0",
+    "winston": "^0.9.0"
   },
   "devDependencies": {
     "chai": "^1.10.0",

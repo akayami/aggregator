@@ -8,6 +8,12 @@ var Aggregator = aggr.aggregator;
 var net = aggr.net;
 
 var n = require('net');
+var winston = require('winston');
+
+var logger = new (winston.Logger)({  // Disable debug
+	transports: []
+});
+
 
 
 describe("Netmodule test", function() {
@@ -171,7 +177,8 @@ describe("Netmodule test", function() {
 						aggregator: r, 
 						protocol: aggr.protocol,
 						serverOptions: {},
-						fallback: aggr.fallback(fallbackFile)
+						fallback: aggr.fallback(fallbackFile),
+						logger: logger
 					}
 				);
 				s.on('connect', function() {
