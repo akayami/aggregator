@@ -93,7 +93,8 @@ describe("Netmodule test", function() {
 					{						
 						protocol: aggr.protocol,
 						serverOptions: {},
-						fallback: aggr.fallback(fallbackFile)
+						fallback: aggr.fallback(fallbackFile),
+						logger: logger
 					}
 				);
 				done(new Error('Has not thrown exception'));
@@ -114,7 +115,8 @@ describe("Netmodule test", function() {
 						aggregator: r, 
 						//protocol: aggr.protocol,
 						serverOptions: {},
-						fallback: aggr.fallback(fallbackFile)
+						fallback: aggr.fallback(fallbackFile),
+						logger: logger
 					}
 				);
 				done('Has not thrown exception');
@@ -134,6 +136,7 @@ describe("Netmodule test", function() {
 					{	
 						aggregator: r, 
 						protocol: aggr.protocol,
+						logger: logger
 					}
 				);
 				done();
@@ -154,7 +157,8 @@ describe("Netmodule test", function() {
 						aggregator: r, 
 						protocol: aggr.protocol,
 						serverOptions: {},
-						fallback: aggr.fallback(fallbackFile)
+						fallback: aggr.fallback(fallbackFile),
+						logger: logger
 					}
 				);
 				done();
@@ -170,7 +174,7 @@ describe("Netmodule test", function() {
 					aggregator: new Aggregator(10),
 					protocol: aggr.protocol
 				});
-				server.listen(port);
+				server.listen(port);				
 					
 				var s = net.socket(
 					{
@@ -183,6 +187,10 @@ describe("Netmodule test", function() {
 				);
 				s.on('connect', function() {
 					done();
+					server.close();
+					s.disconnect();
+					//console.log(s);
+
 				})
 				s.listen(port);
 
@@ -191,5 +199,52 @@ describe("Netmodule test", function() {
 			}
 
 		});
+		
+		it("Should receive aggregated message", function(done) {
+			try {
+				var net = aggr.net;
+				var protocol = aggr.protocol;
+				
+				var serverAggr = new Aggregator(10);
+				serverAggr.on('data', function(data) {
+					if(typeof data == 'object') {
+						if(data.i != 1000) {
+							done('No time interval recieved' + data.i);
+							return;
+						}
+						if(!data.d || !data.d.test || !data.d.test.A) {
+							done('Wrong data received - Mismatched object structure');
+							return;
+						}
+						
+						if(data.d.test.A != 5) {
+							done('Wrong data received - Bad Value: ' + data.d.test.A);
+							return;
+						}
+						done();
+					}
+				});
+				
+				net.server({
+					aggregator: serverAggr, 
+					protocol: protocol,					
+				}).listen(port);
+				
+				var r = new Aggregator(1);
+				
+				var s = net.socket({
+					aggregator: r, 
+					protocol: protocol,
+					logger: logger
+				});
+				s.on('connect', function() {
+					r.ingest('test', 1000, 'A', 5);
+				});
+				s.listen(port);
+				
+			} catch (e) {
+				done(e);
+			}
+		})
 	})
 })
