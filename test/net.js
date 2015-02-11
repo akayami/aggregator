@@ -16,9 +16,9 @@ var logger = new (winston.Logger)({  // Disable debug
 
 
 
-describe("Netmodule test", function() {
+describe("Netmodule", function() {
 	var port = 8999;
-	describe("Server test", function() {
+	describe("Server", function() {
 		it("Starting server with no aggregator should throw exception", function(done) {
 			try {
 				net.server({
@@ -78,7 +78,7 @@ describe("Netmodule test", function() {
 		});
 	})
 	
-	describe("Socket test", function() {
+	describe("Socket", function() {
 		
 		var port = 8999;
 		var aggr = require('../index');
@@ -199,7 +199,9 @@ describe("Netmodule test", function() {
 			}
 
 		});
-		
+	});
+	
+	describe("Combined", function() {		
 		it("Should receive aggregated message", function(done) {
 			try {
 				var net = aggr.net;

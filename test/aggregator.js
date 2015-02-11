@@ -4,7 +4,7 @@
 var aggregator = require('../lib/aggregator.js');
 
 
-describe("Aggregator test", function() {
+describe("Aggregator", function() {
 	
 	//id, stamp, key, value
 	

@@ -24,7 +24,7 @@ function cleanUp(done) {
 	})
 }
 
-describe("Fallback Test", function() {
+describe("Fallback", function() {
 	
 	after(function(done) {
 		cleanUp(done);
