@@ -1,6 +1,6 @@
 {
   "name": "aggregator",
-  "version": "0.0.3",
+  "version": "0.0.4",
   "description": "A module that facilitates implementation of data aggregation system",
   "main": "index.js",
   "scripts": {
@@ -8,7 +8,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "git@bitbucket.org:akayami/reducer.git"
+    "url": "git@github.com:akayami/aggregator.git"
   },
   "author": "Tomasz Rakowski",
   "license": "ISC",
