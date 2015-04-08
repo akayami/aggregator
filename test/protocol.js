@@ -24,7 +24,7 @@ describe("Protocol Test", function() {
 	
 	it('should encode message correctly', function(done) {
 		
-		var expected = {"1000 id1 key1:10,key2:20\n": 1, "1000 id2 key10:22,key20:25\n": 1};
+		var expected = {"1000 id1 key1:10,key2:20": 1, "1000 id2 key10:22,key20:25": 1};
 		
 		protocol.encode(message, function(encoded) {
 			if(expected[encoded]) {
@@ -41,7 +41,10 @@ describe("Protocol Test", function() {
 	it('should decode message correctly', function(done) {
 		var p = extend(true, message);
 		protocol.encode(p, function(encoded) {
-			protocol.decode(encoded, function(id, stamp, key, value) {
+			protocol.decode(encoded, function(err, id, stamp, key, value) {
+				if(err) {
+					done(err);
+				}
 				if(p.i != stamp) {
 					done('Failed to match timestamp');
 				}
