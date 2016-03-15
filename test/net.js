@@ -22,7 +22,7 @@ describe("Netmodule", function() {
 		it("Starting server with no aggregator should throw exception", function(done) {
 			try {
 				net.server({
-					
+
 				});
 				done(new Error('Exception not thrown'));
 			} catch(e) {
@@ -33,11 +33,11 @@ describe("Netmodule", function() {
 				}
 			}
 		})
-		
+
 		it("Starting server with no protocol should throw exception", function(done) {
 			try {
 				net.server({
-					aggregator: new Aggregator(10000)
+					aggregator: {}
 				});
 				done(new Error('Exception not thrown'));
 			} catch(e) {
@@ -48,24 +48,24 @@ describe("Netmodule", function() {
 				}
 			}
 		})
-		
+
 		it("Starting server with aggregator and protocol should work", function(done) {
 			try {
 				net.server({
-					aggregator: new Aggregator(10000),
-					protocol: aggr.protocol
+					aggregator: {},
+					protocol: {}
 				});
 				done();
 			} catch(e) {
 				done(e);
 			}
 		});
-		
+
 		it("Server should listen on assigned port: " + port, function(done) {
 			try {
 				var server = net.server({
-					aggregator: new Aggregator(10),
-					protocol: aggr.protocol
+					aggregator: {},
+					protocol: {}
 				});
 				server.listen(port);
 				var client = n.connect({port: port}, function() {
@@ -77,23 +77,27 @@ describe("Netmodule", function() {
 			}
 		});
 	})
-	
+
 	describe("Socket", function() {
-		
+
 		var port = 8999;
 		var aggr = require('../index');
 		var Aggregator = aggr.aggregator;
-		var r = new Aggregator(100);
+		var r = new Aggregator(100,10,{
+			protocol: aggr.protocol,
+			fallback: aggr.fallback('/tmp'),
+			name: 'AggregatorTest'
+		});
 		var net = aggr.net;
-		
 		var fallbackFile = '/tmp/fallback.test.txt';
+
 		it("Should throw exception when aggregator not provided", function(done) {
 			try {
 				var s = net.socket(
-					{						
-						protocol: aggr.protocol,
+					{
+						protocol: {},
 						serverOptions: {},
-						fallback: aggr.fallback(fallbackFile),
+						fallback: {},
 						logger: logger
 					}
 				);
@@ -107,15 +111,15 @@ describe("Netmodule", function() {
 			}
 
 		});
-		
+
 		it("Should throw exception when protocol not provided", function(done) {
 			try {
 				var s = net.socket(
-					{	
-						aggregator: r, 
+					{
+						aggregator: {},
 						//protocol: aggr.protocol,
 						serverOptions: {},
-						fallback: aggr.fallback(fallbackFile),
+						fallback: {},
 						logger: logger
 					}
 				);
@@ -129,13 +133,13 @@ describe("Netmodule", function() {
 			}
 
 		});
-		
+
 		it("Should not throw exception when aggregator and protocol are provided", function(done) {
 			try {
 				var s = net.socket(
-					{	
-						aggregator: r, 
-						protocol: aggr.protocol,
+					{
+						aggregator: {},
+						protocol: {},
 						logger: logger
 					}
 				);
@@ -149,15 +153,15 @@ describe("Netmodule", function() {
 			}
 
 		});
-		
+
 		it("Should start when properly configured", function(done) {
 			try {
 				var s = net.socket(
 					{
-						aggregator: r, 
-						protocol: aggr.protocol,
+						aggregator: r,
+						protocol: {},
 						serverOptions: {},
-						fallback: aggr.fallback(fallbackFile),
+						fallback: {},
 						logger: logger
 					}
 				);
@@ -167,21 +171,21 @@ describe("Netmodule", function() {
 			}
 
 		});
-		
+
 		it("Should listen on assigned port", function(done) {
 			try {
 				var server = net.server({
-					aggregator: new Aggregator(10),
+					aggregator: r,
 					protocol: aggr.protocol
 				});
-				server.listen(port);				
-					
+				server.listen(port);
+
 				var s = net.socket(
 					{
-						aggregator: r, 
+						aggregator: r,
 						protocol: aggr.protocol,
 						serverOptions: {},
-						fallback: aggr.fallback(fallbackFile),
+						fallback: aggr.fallback('/tmp'),
 						logger: logger
 					}
 				);
@@ -200,15 +204,22 @@ describe("Netmodule", function() {
 
 		});
 	});
-	
-	describe("Combined", function() {		
+
+	describe("Combined", function() {
+		var Aggregator = aggr.aggregator;
+		var r = new Aggregator(100,10,{
+			protocol: aggr.protocol,
+			fallback: aggr.fallback('/tmp'),
+			name: 'AggregatorTest'
+		});
+
 		it("Should receive aggregated message", function(done) {
 			try {
 				var net = aggr.net;
 				var protocol = aggr.protocol;
-				
-				var serverAggr = new Aggregator(10);
-				serverAggr.on('data', function(data) {
+
+				// var serverAggr = new Aggregator(10);
+				r.on('data', function(data) {
 					if(typeof data == 'object') {
 						if(data.i != 1000) {
 							done('No time interval recieved' + data.i);
@@ -218,7 +229,7 @@ describe("Netmodule", function() {
 							done('Wrong data received - Mismatched object structure');
 							return;
 						}
-						
+
 						if(data.d.test.A != 5) {
 							done('Wrong data received - Bad Value: ' + data.d.test.A);
 							return;
@@ -226,16 +237,16 @@ describe("Netmodule", function() {
 						done();
 					}
 				});
-				
+
 				net.server({
-					aggregator: serverAggr, 
-					protocol: protocol,					
+					aggregator: r,
+					protocol: protocol,
 				}).listen(port);
-				
-				var r = new Aggregator(1);
-				
+
+				// var r = new Aggregator(1);
+
 				var s = net.socket({
-					aggregator: r, 
+					aggregator: r,
 					protocol: protocol,
 					logger: logger
 				});
@@ -243,7 +254,7 @@ describe("Netmodule", function() {
 					r.ingest('test', 1000, 'A', 5);
 				});
 				s.listen(port);
-				
+
 			} catch (e) {
 				done(e);
 			}

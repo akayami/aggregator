@@ -6,7 +6,11 @@ var aggr = require('../../index');
 
 var Aggregator = aggr.aggregator;
 
-var r = new Aggregator(1000);
+var r = new Aggregator(1000,100,{
+		protocol: aggr.protocol,
+		fallback: aggr.fallback('/tmp'),
+		name: 'AggregatorPass'
+});
 
 var net = aggr.net;
 var protocol = aggr.protocol;
@@ -17,14 +21,15 @@ var logger = new (winston.Logger)({
 });
 
 net.socket({
-	aggregator: r, 
+	aggregator: r,
 	protocol: protocol,
-	fallback: aggr.fallback('/tmp/pass.txt'),
-	logger: logger
+	fallback: aggr.fallback('/tmp'),
+	logger: logger,
+	name: 'SocketPass'
 }).listen(1337,'127.0.0.1');
 
 net.server({
-	aggregator: r, 
+	aggregator: r,
 	protocol: protocol,
-	name: 'Pass'
+	name: 'ServerPass'
 }).listen(1338, '127.0.0.1');
