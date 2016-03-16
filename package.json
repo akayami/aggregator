@@ -1,6 +1,6 @@
 {
   "name": "aggregator",
-  "version": "0.0.8",
+  "version": "0.1.0",
   "description": "A module that facilitates implementation of data aggregation system",
   "main": "index.js",
   "scripts": {
