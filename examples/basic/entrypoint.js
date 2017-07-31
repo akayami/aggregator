@@ -26,8 +26,6 @@ net.socket(
 	}
 ).listen(1338,'127.0.0.1');
 
-
-
 setInterval(function() {
 	for(var i = 0; i < 10000; i++) {
 		var b = generate();
